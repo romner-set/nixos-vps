@@ -1,0 +1,58 @@
+Each VPS hosts (so far):
+ - a [rathole](https://github.com/rapiz1/rathole) instance for NAT traversal
+ - a KnotDNS secondary server for https://starless.one, though signing only happens on the primary
+
+### Deploying a new VPS
+Mostly a personal guide for convenience, should work for anyone trying to use this config though.
+
+1. Boot into an installer using kexec (https://github.com/nix-community/nixos-images), make sure an SSH key is set in `/root/.ssh/authorized_keys`.
+   This only works for ARM machines, use the one in the linked README for x86
+   ```sh
+   curl -L https://github.com/nix-community/nixos-images/releases/download/nixos-unstable/nixos-kexec-installer-noninteractive-aarch64-linux.tar.gz | tar -xzf- -C /root
+   /root/kexec/run
+   ```
+   SSH into the new system afterwards.
+
+2. Format & mount persistent storage, install system
+   ```sh
+   hostname=REPLACEME
+   repo="romner-set/nixos-vps"
+
+   nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko --flake "github:$repo#$hostname"
+   nixos-install --no-root-passwd --flake "github:$repo#$hostname"
+   ```
+3. Manually create `/mnt/data/rathole.toml` according to this template:
+   ```toml
+   [server]
+   bind_addr = "0.0.0.0:444"
+
+   [client.transport]
+   type = "noise"
+   [client.transport.noise]
+   pattern = "Noise_KK_25519_ChaChaPoly_BLAKE2s"
+   local_private_key = "REPLACEME" # created with `rathole --genkey`
+   remote_public_key = "7+gkthaanoVA1xQz2+9JElHq9gBcYp/7lTeekYL1018=" # main server's pubkey
+
+   [server.services.doq]
+   type = "udp"
+   token = "REPLACEME"
+   bind_addr = "[::1]:853"
+   [server.services.http]
+   token = "REPLACEME"
+   bind_addr = "0.0.0.0:80"
+   [server.services.https]
+   token = "REPLACEME"
+   bind_addr = "0.0.0.0:443"
+   ```
+
+4. Setup `/data` & reboot
+   ```sh
+   cd /mnt/data
+   chmod 600 rathole.toml # see 3.
+   mkdir knot && chown 999:999 knot
+   reboot
+   ```
+5. Update main server, i.e.
+   1. Create new rathole keys & client config
+   2. Authorize the VPS' `knotc status cert-key`
+6. Do something productive (or not) with the time you've just saved
