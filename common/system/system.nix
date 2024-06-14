@@ -25,11 +25,11 @@
     enable = true;
     #channel = "https://nixos.org/channels/nixos-24.05";
     dates = "04:30";
-    flake = "/etc/nixos";
-    flags = [
+    flake = "github:romner-set/nixos-vps/main"; #"/etc/nixos";
+    /*flags = [
       "--update-input"
       "nixpkgs"
-    ];
+    ];*/
     allowReboot = true;
     randomizedDelaySec = "60min";
   };
