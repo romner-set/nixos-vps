@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  domain = "starless.one";
+  domain = "cynosure.red";
   quic-key = "qPn4VWWN4MlloImery9UMfDVE5QElGEXM0M60kBcpig="; # public cert of primary server, safe to expose
 in {
   # KnotDNS

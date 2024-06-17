@@ -1,6 +1,6 @@
 Each VPS hosts (so far):
  - a [rathole](https://github.com/rapiz1/rathole) instance for NAT traversal
- - a KnotDNS secondary server for https://starless.one
+ - a KnotDNS secondary server for https://cynosure.red
 
 It's also worth noting that the VPSs are considered completely untrusted, so they only proxy already encrypted web traffic at the TCP level and publish records DNSSEC-signed by the trusted main server (to whose hardware I have physical access to).
 
