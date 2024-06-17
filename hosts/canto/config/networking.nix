@@ -14,5 +14,5 @@
       {routeConfig.Gateway = "fe80::1";}
     ];
   };
-  networking.hostName = "phobos";
+  networking.hostName = "canto";
 }

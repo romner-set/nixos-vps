@@ -8,5 +8,5 @@
     matchConfig.Name = "enp0s6";
     networkConfig.DHCP = "yes";
   };
-  networking.hostName = "deimos";
+  networking.hostName = "erebus";
 }
